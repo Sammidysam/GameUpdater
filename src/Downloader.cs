@@ -18,6 +18,7 @@ namespace GameUpdater {
 			string WackyFileName = MakeWackyFileName();
 			while(File.Exists(PathGetter.GetDirectoryPath() + WackyFileName))
 				WackyFileName = MakeWackyFileName();
+			Console.WriteLine("Checking if internet connection is available...");
 			WebClient webClient = new WebClient();
 			try {
 				webClient.DownloadFile("https://www.google.com/", PathGetter.GetDirectoryPath() + WackyFileName);
