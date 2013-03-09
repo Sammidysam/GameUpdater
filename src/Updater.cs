@@ -13,8 +13,8 @@ namespace GameUpdater {
 			FilePath = PathGetter.GetDirectoryPath() + FileName;
 			DatePath = PathGetter.GetDirectoryPath() + DateName;
 			this.UploadPath = UploadPath;
-			if(UploadPath[UploadPath.Length - 1] != '\\'){
-				Console.WriteLine("UploadPath must end in the character " + '\\');
+			if(UploadPath[UploadPath.Length - 1] != Path.DirectorySeparatorChar){
+				Console.WriteLine("UploadPath must end in the character " + Path.DirectorySeparatorChar);
 				throw new Exception();
 			}
 			this.FileName = FileName;

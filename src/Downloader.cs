@@ -16,7 +16,7 @@ namespace GameUpdater {
 			this.FileSite = FileSite;
 			this.DateSite = DateSite;
 			string WackyFileName = MakeWackyFileName();
-			while(File.Exists(WackyFileName))
+			while(File.Exists(PathGetter.GetDirectoryPath() + WackyFileName))
 				WackyFileName = MakeWackyFileName();
 			WebClient webClient = new WebClient();
 			try {
