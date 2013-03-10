@@ -88,8 +88,8 @@ namespace GameUpdater {
 		private void webClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e){
 			double BytesIn = double.Parse(e.BytesReceived.ToString());
 			double TotalBytes = double.Parse(e.TotalBytesToReceive.ToString());
-			Percentage = BytesIn / TotalBytes * 100;
-			Console.WriteLine(Percentage);
+			Percentage = Math.Round(BytesIn / TotalBytes * 1000) / 10;
+			Console.WriteLine(Percentage + "% done");
 		}
 		private void webClient_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e){
 			Console.WriteLine("Success");
