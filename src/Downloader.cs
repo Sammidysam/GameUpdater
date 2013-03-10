@@ -63,10 +63,6 @@ namespace GameUpdater {
 			else
 				Console.WriteLine("No internet detected, no update will be downloaded");
 		}
-		private void DeleteFiles(){
-			File.Delete(FilePath);
-			File.Delete(DatePath);
-		}
 		private void DownloadFiles(){
 			Console.WriteLine("Downloading...");
 			WebClient webClient = new WebClient();
