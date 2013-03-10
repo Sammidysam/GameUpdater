@@ -17,9 +17,6 @@ namespace GameUpdater {
 			DatePath = PathGetter.GetDirectoryPath() + DateName;
 			this.FileSite = FileSite;
 			this.DateSite = DateSite;
-			string WackyFileName = MakeWackyFileName();
-			while(File.Exists(PathGetter.GetDirectoryPath() + WackyFileName))
-				WackyFileName = MakeWackyFileName();
 			Console.WriteLine("Checking if internet connection is available...");
 			try {
 				Ping Google = new Ping();
@@ -94,9 +91,6 @@ namespace GameUpdater {
 			for(int i = 0; i < Text.Length; i++)
 				NecessaryValues[i] = Convert.ToInt32(Text[i]);
 			return new DateTime(NecessaryValues[0], NecessaryValues[1], NecessaryValues[2], NecessaryValues[3], NecessaryValues[4], NecessaryValues[5]);
-		}
-		private string MakeWackyFileName(){
-			return new Random().Next(int.MinValue, int.MaxValue) + ".txt";
 		}
 	}
 }
