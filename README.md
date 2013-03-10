@@ -24,11 +24,22 @@ The program detects if internet is available by pinging google.com .  This is a 
 
 If you are using this library, please make your launcher application a different application than your actual game.  This will allow the library to update it, as it can't update itself!  Here is some example code that will show you what I did to get the library going:
 <pre>
-  		Downloader downloader = new Downloader("text.txt", "date.txt", "http://sammidysam.github.com/text.txt", "http://sammidysam.github.com/date.txt");
-			downloader.CheckForUpdate();
-			Updater updater = new Updater("text.txt", "date.txt", "C:\\Users\\Sam\\Documents\\Website\\Sammidysam.github.com\\");
-			updater.Update();
-			Console.ReadKey(true);
+  	Downloader downloader = new Downloader("text.txt", "date.txt", "http://sammidysam.github.com/text.txt", "http://sammidysam.github.com/date.txt");
+	downloader.CheckForUpdate();
+	Updater updater = new Updater("text.txt", "date.txt", "C:\\Users\\Sam\\Documents\\Website\\Sammidysam.github.com\\");
+	updater.Update();
+	Console.ReadKey(true);
 </pre>
 
 That's how simple it is.
+
+In a recent update the functionality for progress to be printed on the console was added.  It will always do so when the file is being downloaded.  You do not need to add any arguments to the Downloader instance, as it will update the progress automatically.  However, the next lines in your Main() method will run before the download is finished unless you put in a while loop after calling CheckForUpdate().  It's bad if it runs before the download is finished because it can cause the game to try to launch an unfinished download game.  That would cause an error.  This is what the while loop should look like, with the method GameCode() being launching the game and other things to do before that:
+
+<pre>
+	Downloader downloader = new Downloader("hgbg1.0.2.zip", "date.txt", "http://sammidysam.github.com/hgbg1.0.2.zip", "http://sammidysam.github.com/date.txt");
+	downloader.CheckForUpdate();
+	while(downloader.GetHasInternet() && !downloader.GetDownloadComplete());
+	GameCode();
+</pre>
+
+CheckForUpdate() will print out the progress value that it is currently at, such as "57.5% done".  The library will not make a progress bar for you, however, because I assume that you might want to customize that and I don't want to get in the way of that.
