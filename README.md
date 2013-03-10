@@ -3,6 +3,8 @@ GameUpdater
 
 A game updater library created in C#.  It can be used for any type of file, whether that be .exe, .jar, or .txt.
 
+This library figures out if an update is necessary by checking the time of the most recent update and updating if the time of the most recent update is later than the time when last updated (the time on the file at the same directory as the game). When using the update() method, the updater will automatically timestamp the update with the current system time at the time of the update.
+
 
 How to use:
 
@@ -19,3 +21,14 @@ After creating a new Updater, you will call the Update() method in Updater and i
 
 This program will detect if the computer in use has internet.  If it does, it will attempt to download the files necessary.  If it doesn't it will not.  This allows you, the developer, to only need to call the CheckForUpdate() method.
 The program detects if internet is available by pinging google.com .  This is a lot faster and more efficient than the previous method of downloading google.com's source code.
+
+If you are using this library, please make your launcher application a different application than your actual game.  This will allow the library to update it, as it can't update itself!  Here is some example code that will show you what I did to get the library going:
+<pre>
+  		Downloader downloader = new Downloader("text.txt", "date.txt", "http://sammidysam.github.com/text.txt", "http://sammidysam.github.com/date.txt");
+			downloader.CheckForUpdate();
+			Updater updater = new Updater("text.txt", "date.txt", "C:\\Users\\Sam\\Documents\\Website\\Sammidysam.github.com\\");
+			updater.Update();
+			Console.ReadKey(true);
+</pre>
+
+That's how simple it is.
