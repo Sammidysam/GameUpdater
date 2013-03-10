@@ -4,6 +4,7 @@ using System.Net.NetworkInformation;
 using FileHelper;
 using System.IO;
 using System.Net.Sockets;
+using System.ComponentModel;
 
 namespace GameUpdater {
 	public class Downloader {
@@ -12,6 +13,8 @@ namespace GameUpdater {
 		private string FileSite;
 		private string DateSite;
 		private bool HasInternet;
+		private double Percentage;
+		private bool DownloadComplete = false;
 		public Downloader(string FileName, string DateName, string FileSite, string DateSite){
 			FilePath = PathGetter.GetDirectoryPath() + FileName;
 			DatePath = PathGetter.GetDirectoryPath() + DateName;
@@ -45,8 +48,10 @@ namespace GameUpdater {
 						DateTime TimeOfUpdate = ConvertFileToDateTime(PathGetter.GetDirectoryPath() + "tempDate.txt");
 						File.Delete(PathGetter.GetDirectoryPath() + "tempDate.txt");
 						DateTime TimeOnFile = ConvertFileToDateTime(DatePath);
-						if(DateTime.Compare(TimeOnFile, TimeOfUpdate) > 0)
+						if(DateTime.Compare(TimeOnFile, TimeOfUpdate) > 0){
+							DownloadComplete = true;
 							Console.WriteLine("No download necessary");
+						}
 						else {
 							Console.WriteLine("Download necessary");
 							DownloadFiles();
@@ -60,14 +65,33 @@ namespace GameUpdater {
 					DownloadFiles();
 				}
 			}
-			else
+			else {
+				DownloadComplete = true;
 				Console.WriteLine("No internet detected, no update will be downloaded");
+			}
 		}
 		private void DownloadFiles(){
 			Console.WriteLine("Downloading...");
 			WebClient webClient = new WebClient();
-			webClient.DownloadFile(FileSite, FilePath);
+			webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(webClient_DownloadProgressChanged);
+			webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(webClient_DownloadFileCompleted);
+			webClient.DownloadFileAsync(new Uri(FileSite), FilePath);
 			webClient.Dispose();
+		}
+		private DateTime ConvertFileToDateTime(string FilePath){
+			string[] Text = File.ReadAllLines(FilePath);
+			int[] NecessaryValues = new int[Text.Length];
+			for(int i = 0; i < Text.Length; i++)
+				NecessaryValues[i] = Convert.ToInt32(Text[i]);
+			return new DateTime(NecessaryValues[0], NecessaryValues[1], NecessaryValues[2], NecessaryValues[3], NecessaryValues[4], NecessaryValues[5]);
+		}
+		private void webClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e){
+			double BytesIn = double.Parse(e.BytesReceived.ToString());
+			double TotalBytes = double.Parse(e.TotalBytesToReceive.ToString());
+			Percentage = BytesIn / TotalBytes * 100;
+			Console.WriteLine(Percentage);
+		}
+		private void webClient_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e){
 			Console.WriteLine("Success");
 			Console.WriteLine("Making datestamp...");
 			File.CreateText(DatePath).Close();
@@ -80,13 +104,16 @@ namespace GameUpdater {
 			Values[5] = Convert.ToString(DateTime.UtcNow.Second);
 			File.WriteAllLines(DatePath, Values);
 			Console.WriteLine("Datestamp completed");
+			DownloadComplete = true;
 		}
-		private DateTime ConvertFileToDateTime(string FilePath){
-			string[] Text = File.ReadAllLines(FilePath);
-			int[] NecessaryValues = new int[Text.Length];
-			for(int i = 0; i < Text.Length; i++)
-				NecessaryValues[i] = Convert.ToInt32(Text[i]);
-			return new DateTime(NecessaryValues[0], NecessaryValues[1], NecessaryValues[2], NecessaryValues[3], NecessaryValues[4], NecessaryValues[5]);
+		public double GetPercentage(){
+			return Percentage;
+		}
+		public bool GetDownloadComplete(){
+			return DownloadComplete;
+		}
+		public bool GetHasInternet(){
+			return HasInternet;
 		}
 	}
 }
