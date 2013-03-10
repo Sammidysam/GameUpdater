@@ -26,7 +26,16 @@ namespace GameUpdater {
 			File.Delete(UploadPath + DateName);
 			Console.WriteLine("Updating files...");
 			File.Copy(FilePath, UploadPath + FileName);
-			File.Copy(DatePath, UploadPath + DateName);
+			Console.WriteLine("File updated.  Creating timestamp...");
+			File.CreateText(UploadPath + DateName).Close();
+			string[] Values = new string[6];
+			Values[0] = Convert.ToString(DateTime.Now.Year);
+			Values[1] = Convert.ToString(DateTime.Now.Month);
+			Values[2] = Convert.ToString(DateTime.Now.Day);
+			Values[3] = Convert.ToString(DateTime.Now.Hour);
+			Values[4] = Convert.ToString(DateTime.Now.Minute);
+			Values[5] = Convert.ToString(DateTime.Now.Second);
+			File.WriteAllLines(UploadPath + DateName, Values);
 			Console.WriteLine("Update complete");
 		}
 	}
