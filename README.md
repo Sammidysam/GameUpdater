@@ -18,5 +18,4 @@ Files cannot be uploaded directly to the website.  Instead, you will update it t
 After creating a new Updater, you will call the Update() method in Updater and it will update the file and date file at the absolute location specified.
 
 This program will detect if the computer in use has internet.  If it does, it will attempt to download the files necessary.  If it doesn't it will not.  This allows you, the developer, to only need to call the CheckForUpdate() method.
-The program detects internet connection via trying to download the source at https://www.google.com/ .  If it succeeds, it will determine that internet connection is available.  If it fails, it will not attempt to download anything.
-I choose https://www.google.com/ as my website for determining internet connection because I feel like it is one of the least likely websites to be down at a given moment.  There may be even less likely websites, however, so I may change this in the future.
+The program detects if internet is available by pinging google.com .  This is a lot faster and more efficient than the previous method of downloading google.com's source code.
