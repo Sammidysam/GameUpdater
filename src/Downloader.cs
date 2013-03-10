@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Net;
+using System.Net.NetworkInformation;
 using FileHelper;
 using System.IO;
+using System.Net.Sockets;
 
 namespace GameUpdater {
 	public class Downloader {
@@ -19,15 +21,20 @@ namespace GameUpdater {
 			while(File.Exists(PathGetter.GetDirectoryPath() + WackyFileName))
 				WackyFileName = MakeWackyFileName();
 			Console.WriteLine("Checking if internet connection is available...");
-			WebClient webClient = new WebClient();
 			try {
-				webClient.DownloadFile("https://www.google.com/", PathGetter.GetDirectoryPath() + WackyFileName);
-				webClient.Dispose();
-				HasInternet = true;
-			} catch (WebException) {
+				Ping Google = new Ping();
+				string GoogleURL = "www.google.com";
+				IPAddress[] GoogleIPs = Dns.GetHostAddresses(GoogleURL);
+				PingReply Reply = Google.Send(GoogleIPs[new Random().Next(0, GoogleIPs.Length)]);
+				if(Reply.Status == IPStatus.Success){
+					HasInternet = true;
+					Console.WriteLine("Internet connection available");
+				}
+				else
+					HasInternet = false;
+				Google.Dispose();
+			} catch (SocketException) {
 				HasInternet = false;
-				webClient.Dispose();
-				File.Delete(PathGetter.GetDirectoryPath() + WackyFileName);
 			}
 		}
 		public void CheckForUpdate(){
