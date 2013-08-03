@@ -43,3 +43,8 @@ In a recent update the functionality for progress to be printed on the console w
 </pre>
 
 CheckForUpdate() will print out the progress value that it is currently at, such as "57.5% done".  The library will not make a progress bar for you, however, because I assume that you might want to customize that and I don't want to get in the way of that.
+
+License
+=======
+
+This program is licensed under the GNU Lesser General Public License version 3. To see the license, visit the file [LICENSE](LICENSE).
